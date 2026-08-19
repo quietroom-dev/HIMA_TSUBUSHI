@@ -39,3 +39,16 @@ body {
     font-size: 1.2rem;
     margin-top: 20px;
 }
+
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 300px;
+}
