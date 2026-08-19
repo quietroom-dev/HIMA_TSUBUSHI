@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暇つぶしゲーム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ★広告スペース（あなたが後で差し替え） -->
+    <header id="ad-space">
+        広告スペース（ここにバナーを入れる）
+    </header>
+
+    <main>
+        <h1>暇つぶしゲーム</h1>
+        <div id="score">スコア: 0</div>
+
+        <div id="game-area"></div>
+
+        <button id="start-btn">ゲーム開始</button>
+
+        <div id="game-over" class="hidden">
+            <h2>ゲーム終了</h2>
+            <p id="game-over-message"></p>
+            <button id="restart-btn">もう一度遊ぶ</button>
+        </div>
+    </main>
+
+    <script src="game.js"></script>
+</body>
+</html>
