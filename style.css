@@ -29,7 +29,7 @@ body {
 /* ゲームエリア */
 #game-area {
     width: 100%;
-    height: calc(60vh - 80px);
+    height: calc(60vh - 60px);
     background: #fff;
     border: 2px solid #ccc;
     position: relative;
