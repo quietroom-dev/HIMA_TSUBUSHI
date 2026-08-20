@@ -116,9 +116,8 @@ body {
     display: none;
 }
 
-/* ★フッター広告（ページの一番下） */
 #ad-footer {
-    position: fixed;       /* ★画面下に固定 */
+    position: fixed;      /* ★画面下に固定する */
     bottom: 0;
     left: 0;
     width: 100%;
@@ -127,6 +126,5 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;         /* ★ゲームより前に表示 */
+    z-index: 9999;        /* ★ゲームより前に表示 */
 }
-
