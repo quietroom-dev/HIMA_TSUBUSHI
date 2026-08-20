@@ -134,6 +134,9 @@ function spawnWord() {
 function endGame(wrongWord) {
     isPlaying = false;
 
+    // ★画面クリア（出ている文字を全部消す）
+    gameArea.innerHTML = "";
+
     let message;
 
     if (wrongWord === "miss") {
