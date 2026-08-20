@@ -16,9 +16,11 @@ const wrongWords = {
 
 let score = 0;
 let isPlaying = false;
-let spawnDelay = 900; // 初期出現間隔（ms）
+let spawnDelay = 900;
 
+// DOM
 const titleScreen = document.getElementById("title-screen");
+const rankingList = document.getElementById("ranking-list");
 const gameArea = document.getElementById("game-area");
 const scoreDisplay = document.getElementById("score");
 const gameOverScreen = document.getElementById("game-over");
@@ -27,28 +29,51 @@ const gameOverMessage = document.getElementById("game-over-message");
 document.getElementById("title-start-btn").addEventListener("click", startGame);
 document.getElementById("restart-btn").addEventListener("click", startGame);
 
-function startGame() {
-    // タイトル画面を消す
-    titleScreen.classList.add("hidden");
+// ★ ランキング読み込み
+function loadRanking() {
+    const data = JSON.parse(localStorage.getItem("ranking")) || [];
+    rankingList.innerHTML = "";
 
-    // ゲーム画面を表示
+    data.forEach((item, i) => {
+        const li = document.createElement("li");
+        li.textContent = `${i + 1}位：${item}点`;
+        rankingList.appendChild(li);
+    });
+}
+
+// ★ ランキング保存
+function saveRanking(newScore) {
+    let data = JSON.parse(localStorage.getItem("ranking")) || [];
+    data.push(newScore);
+
+    // 高い順に並べる
+    data.sort((a, b) => b - a);
+
+    // 上位5件だけ残す
+    data = data.slice(0, 5);
+
+    localStorage.setItem("ranking", JSON.stringify(data));
+}
+
+loadRanking();
+
+function startGame() {
+    titleScreen.classList.add("hidden");
     gameArea.classList.remove("hidden");
     scoreDisplay.classList.remove("hidden");
 
-    // ゲーム初期化
     score = 0;
     isPlaying = true;
     spawnDelay = 900;
     scoreDisplay.textContent = "スコア: " + score;
     gameOverScreen.classList.add("hidden");
 
-    // 画面クリア
     gameArea.innerHTML = "";
 
     spawnWordLoop();
 }
 
-// 出現間隔が徐々に速くなるループ
+// ★ 徐々に速くなるループ
 function spawnWordLoop() {
     if (!isPlaying) return;
 
@@ -81,7 +106,7 @@ function spawnWord() {
 
     wordElem.textContent = wordText;
 
-    // 重なり防止
+    // ★ 重なり防止
     let x, y;
     let safe = false;
 
@@ -142,7 +167,6 @@ function spawnWord() {
 function endGame(wrongWord) {
     isPlaying = false;
 
-    // 画面クリア
     gameArea.innerHTML = "";
 
     let message;
@@ -153,6 +177,10 @@ function endGame(wrongWord) {
         const comment = wrongWords[wrongWord] || "何か間違えた…";
         message = `${wrongWord}を潰した\n${comment}`;
     }
+
+    // ★ ランキング保存
+    saveRanking(score);
+    loadRanking();
 
     gameOverMessage.textContent = message;
     gameOverScreen.classList.remove("hidden");
