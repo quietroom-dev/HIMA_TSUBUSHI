@@ -11,38 +11,49 @@ const wrongWords = {
     "目": "失明…",
     "悪": "世界は平和になり、再び暇になった…",
     "ヒヒ": "動物愛護団体から訴えられた…",
-    "しま": "日本列「島」が沈没した…"
+    "しま": "日本が沈没した…"
 };
 
 let score = 0;
 let isPlaying = false;
 let spawnDelay = 900; // 初期出現間隔（ms）
 
+const titleScreen = document.getElementById("title-screen");
 const gameArea = document.getElementById("game-area");
 const scoreDisplay = document.getElementById("score");
 const gameOverScreen = document.getElementById("game-over");
 const gameOverMessage = document.getElementById("game-over-message");
 
-document.getElementById("start-btn").addEventListener("click", startGame);
+document.getElementById("title-start-btn").addEventListener("click", startGame);
 document.getElementById("restart-btn").addEventListener("click", startGame);
 
 function startGame() {
+    // タイトル画面を消す
+    titleScreen.classList.add("hidden");
+
+    // ゲーム画面を表示
+    gameArea.classList.remove("hidden");
+    scoreDisplay.classList.remove("hidden");
+
+    // ゲーム初期化
     score = 0;
     isPlaying = true;
-    spawnDelay = 900; // リセット
+    spawnDelay = 900;
     scoreDisplay.textContent = "スコア: " + score;
     gameOverScreen.classList.add("hidden");
 
-    spawnWordLoop(); // ★ 徐々に速くなるループ開始
+    // 画面クリア
+    gameArea.innerHTML = "";
+
+    spawnWordLoop();
 }
 
-// ★ 出現間隔が徐々に速くなるループ
+// 出現間隔が徐々に速くなるループ
 function spawnWordLoop() {
     if (!isPlaying) return;
 
     spawnWord();
 
-    // 徐々に速くする（本当に少しずつ）
     if (spawnDelay > 200) {
         spawnDelay -= 5;
     }
@@ -56,12 +67,11 @@ function spawnWord() {
     const wordElem = document.createElement("div");
     wordElem.classList.add("word");
 
-    // 出現確率
     const rand = Math.random();
     let wordText;
 
     if (rand < 0.03) {
-        wordText = "しま"; // レア文字
+        wordText = "しま";
     } else if (rand < 0.7) {
         wordText = correctWords[Math.floor(Math.random() * correctWords.length)];
     } else {
@@ -71,13 +81,13 @@ function spawnWord() {
 
     wordElem.textContent = wordText;
 
-    // ★ 重なり防止ロジック
+    // 重なり防止
     let x, y;
     let safe = false;
 
     while (!safe) {
         x = Math.random() * (gameArea.clientWidth - 80);
-        y = Math.random() * (gameArea.clientHeight - 160); // 広告避ける
+        y = Math.random() * (gameArea.clientHeight - 160);
 
         safe = true;
 
@@ -105,7 +115,6 @@ function spawnWord() {
     wordElem.style.left = x + "px";
     wordElem.style.top = y + "px";
 
-    // クリック処理
     wordElem.addEventListener("click", () => {
         if (!isPlaying) return;
 
@@ -120,7 +129,6 @@ function spawnWord() {
 
     gameArea.appendChild(wordElem);
 
-    // 3秒後に消える → 押せなかったら終了
     setTimeout(() => {
         if (wordElem.parentNode) {
             if (correctWords.includes(wordText)) {
@@ -134,7 +142,7 @@ function spawnWord() {
 function endGame(wrongWord) {
     isPlaying = false;
 
-    // ★画面クリア（出ている文字を全部消す）
+    // 画面クリア
     gameArea.innerHTML = "";
 
     let message;
