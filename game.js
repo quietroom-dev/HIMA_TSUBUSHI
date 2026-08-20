@@ -176,7 +176,6 @@ function spawnWord() {
 
 function endGame(wrongWord) {
     isPlaying = false;
-
     gameArea.innerHTML = "";
 
     let message;
@@ -188,9 +187,13 @@ function endGame(wrongWord) {
         message = `${wrongWord}を潰した\n${comment}`;
     }
 
+    // ★スコアを保存
     saveRanking(score);
     loadRanking();
 
-    gameOverMessage.textContent = message;
+    // ★スコアを表示（ここを追加）
+    gameOverMessage.textContent = `スコア: ${score}\n${message}`;
+
     gameOverScreen.classList.remove("hidden");
 }
+
