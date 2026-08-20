@@ -9,18 +9,24 @@
 <body>
 
     <main>
-        <h1>暇つぶしゲーム</h1>
-        <div id="score">スコア: 0</div>
 
-        <div id="game-area"></div>
+        <!-- ★タイトル画面 -->
+        <div id="title-screen">
+            <h1>暇つぶしゲーム</h1>
+            <button id="title-start-btn">ゲーム開始</button>
+        </div>
 
-        <button id="start-btn">ゲーム開始</button>
+        <!-- ★ゲーム画面 -->
+        <div id="game-area" class="hidden"></div>
+
+        <div id="score" class="hidden">スコア: 0</div>
 
         <div id="game-over" class="hidden">
             <h2>ゲーム終了</h2>
             <p id="game-over-message"></p>
             <button id="restart-btn">もう一度遊ぶ</button>
         </div>
+
     </main>
 
     <!-- ★広告スペース（フッター） -->
