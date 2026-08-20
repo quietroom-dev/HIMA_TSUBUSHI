@@ -192,7 +192,7 @@ function endGame(wrongWord) {
     loadRanking();
 
     // ★スコアを表示（ここを追加）
-    gameOverMessage.textContent = `スコア: ${score}\n${message}`;
+    gameOverMessage.textContent = `スコア: ${score}点\n${message}`;
 
     gameOverScreen.classList.remove("hidden");
 }
