@@ -28,11 +28,17 @@ body {
 
 
 
-#title-start-btn {
+#restart-btn {
     padding: 15px 30px;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin-top: 20px;
 }
+
+#title-start-btn {
+    padding: 20px 40px;
+    font-size: 1.6rem;
+}
+
 
 .hidden {
     display: none;
