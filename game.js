@@ -86,8 +86,8 @@ function spawnWordLoop() {
 
     spawnWord();
 
-    if (spawnDelay > 200) {
-        spawnDelay -= 5;
+    if (spawnDelay > 10) {
+        spawnDelay -= 10;
     }
 
     setTimeout(spawnWordLoop, spawnDelay);
