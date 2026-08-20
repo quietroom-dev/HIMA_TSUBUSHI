@@ -65,8 +65,6 @@ function saveRanking(newScore) {
 loadRanking();
 
 function startGame() {
-    // タイトル画面を消す
-    titleScreen.classList.add("hidden");
 
     // ゲームエリアはそのまま表示
     gameArea.classList.remove("hidden");
