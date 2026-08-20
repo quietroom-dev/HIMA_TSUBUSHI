@@ -102,7 +102,7 @@ function endGame(wrongWord) {
         message = "暇が潰せなかった…";
     } else {
         message = wrongWords[wrongWord] || "何か間違えた…";
-        message = `${wrongWord} → ${message}`;
+        message = `${wrongWord}を潰した\n${comment}`;
     }
 
     gameOverMessage.textContent = message;
