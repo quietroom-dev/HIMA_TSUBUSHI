@@ -34,10 +34,25 @@ body {
     border: 2px solid #ccc;
     position: relative;
     overflow: hidden;
-    margin-bottom: 20px;
 }
 
-/* ゲーム開始ボタン（ゲームエリア中央） */
+/* ゲームエリア内のランキング */
+#ranking-area {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+#ranking-list {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+    font-size: 1.1rem;
+}
+
+/* 開始ボタンは中央 */
 .start-inside {
     position: absolute;
     top: 50%;
@@ -46,6 +61,7 @@ body {
     padding: 20px 40px;
     font-size: 1.6rem;
 }
+
 
 /* 出現する文字 */
 .word {
