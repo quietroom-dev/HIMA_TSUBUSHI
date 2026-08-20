@@ -197,3 +197,21 @@ function endGame(wrongWord) {
     gameOverScreen.classList.remove("hidden");
 }
 
+function shareGame() {
+    const shareData = {
+        title: "暇つぶしゲーム",
+        text: "このゲーム面白いよ！暇を潰せるよ！",
+        url: location.href
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData)
+            .catch(err => console.log("シェア失敗:", err));
+    } else {
+        alert("このブラウザはシェア機能に対応していません。\nURLをコピーして紹介してください！");
+    }
+}
+
+document.getElementById("share-btn")?.addEventListener("click", shareGame);
+document.getElementById("share-btn-gameover")?.addEventListener("click", shareGame);
+
