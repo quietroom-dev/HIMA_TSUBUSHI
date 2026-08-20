@@ -8,11 +8,13 @@
 </head>
 <body>
 
-    <main>
-
-<!-- ★タイトル画面（ゲームエリアの外） -->
+<!-- ★タイトル（ゲームエリアの上） -->
 <div id="title-screen">
     <h1>暇つぶしゲーム</h1>
+
+    <p class="description">
+        画面に出てくるいろんな暇をタップで潰してください。
+    </p>
 
     <h2>ランキング</h2>
     <ul id="ranking-list"></ul>
@@ -23,8 +25,10 @@
     <button id="title-start-btn" class="start-inside">ゲーム開始</button>
 </div>
 
+<!-- ★スコア表示 -->
 <div id="score" class="hidden">スコア: 0</div>
 
+<!-- ★ゲームオーバー画面 -->
 <div id="game-over" class="hidden">
     <h2>ゲーム終了</h2>
     <p id="game-over-message"></p>
@@ -35,13 +39,12 @@
     <button id="restart-btn">もう一度遊ぶ</button>
 </div>
 
-    </main>
+<!-- ★フッター広告（ページの一番下） -->
+<footer id="ad-footer">
+    広告スペース（ここにバナー）
+</footer>
 
-    <!-- ★広告スペース（フッター） -->
-    <footer id="ad-space">
-        広告スペース（ここにバナーを入れる）
-    </footer>
 
-    <script src="game.js"></script>
+<script src="game.js"></script>
 </body>
 </html>
