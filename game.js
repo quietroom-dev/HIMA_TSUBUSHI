@@ -101,7 +101,7 @@ function endGame(wrongWord) {
     if (wrongWord === "miss") {
         message = "暇を潰せなかった…";
     } else {
-        message = wrongWords[wrongWord] || "何か間違えた…";
+        const comment = wrongWords[wrongWord] || "何か間違えた…";
         message = `${wrongWord}を潰した\n${comment}`;
     }
 
