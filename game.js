@@ -65,7 +65,10 @@ function saveRanking(newScore) {
 loadRanking();
 
 function startGame() {
+    // タイトル画面を消す
     titleScreen.classList.add("hidden");
+
+    // ゲームエリアはそのまま表示
     gameArea.classList.remove("hidden");
     scoreDisplay.classList.remove("hidden");
 
@@ -75,10 +78,12 @@ function startGame() {
     scoreDisplay.textContent = "スコア: " + score;
     gameOverScreen.classList.add("hidden");
 
+    // ゲームエリアをクリア
     gameArea.innerHTML = "";
 
     spawnWordLoop();
 }
+
 
 // 徐々に速くなるループ
 function spawnWordLoop() {
