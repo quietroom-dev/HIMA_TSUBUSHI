@@ -20,7 +20,8 @@ let spawnDelay = 900;
 
 // DOM
 const titleScreen = document.getElementById("title-screen");
-const rankingList = document.getElementById("ranking-list");
+const rankingListTitle = document.getElementById("ranking-list");
+const rankingListGameover = document.getElementById("ranking-list-gameover");
 const gameArea = document.getElementById("game-area");
 const scoreDisplay = document.getElementById("score");
 const gameOverScreen = document.getElementById("game-over");
@@ -29,27 +30,33 @@ const gameOverMessage = document.getElementById("game-over-message");
 document.getElementById("title-start-btn").addEventListener("click", startGame);
 document.getElementById("restart-btn").addEventListener("click", startGame);
 
-// ★ ランキング読み込み
+// ランキング読み込み
 function loadRanking() {
     const data = JSON.parse(localStorage.getItem("ranking")) || [];
-    rankingList.innerHTML = "";
 
+    // タイトル画面のランキング
+    rankingListTitle.innerHTML = "";
     data.forEach((item, i) => {
         const li = document.createElement("li");
         li.textContent = `${i + 1}位：${item}点`;
-        rankingList.appendChild(li);
+        rankingListTitle.appendChild(li);
+    });
+
+    // ゲームオーバー画面のランキング
+    rankingListGameover.innerHTML = "";
+    data.forEach((item, i) => {
+        const li = document.createElement("li");
+        li.textContent = `${i + 1}位：${item}点`;
+        rankingListGameover.appendChild(li);
     });
 }
 
-// ★ ランキング保存
+// ランキング保存
 function saveRanking(newScore) {
     let data = JSON.parse(localStorage.getItem("ranking")) || [];
     data.push(newScore);
 
-    // 高い順に並べる
     data.sort((a, b) => b - a);
-
-    // 上位5件だけ残す
     data = data.slice(0, 5);
 
     localStorage.setItem("ranking", JSON.stringify(data));
@@ -73,7 +80,7 @@ function startGame() {
     spawnWordLoop();
 }
 
-// ★ 徐々に速くなるループ
+// 徐々に速くなるループ
 function spawnWordLoop() {
     if (!isPlaying) return;
 
@@ -106,7 +113,7 @@ function spawnWord() {
 
     wordElem.textContent = wordText;
 
-    // ★ 重なり防止
+    // 重なり防止
     let x, y;
     let safe = false;
 
@@ -178,7 +185,6 @@ function endGame(wrongWord) {
         message = `${wrongWord}を潰した\n${comment}`;
     }
 
-    // ★ ランキング保存
     saveRanking(score);
     loadRanking();
 
