@@ -15,8 +15,8 @@ const wrongWords = {
 };
 
 let score = 0;
-let gameInterval;
 let isPlaying = false;
+let spawnDelay = 900; // 初期出現間隔（ms）
 
 const gameArea = document.getElementById("game-area");
 const scoreDisplay = document.getElementById("score");
@@ -29,11 +29,25 @@ document.getElementById("restart-btn").addEventListener("click", startGame);
 function startGame() {
     score = 0;
     isPlaying = true;
+    spawnDelay = 900; // リセット
     scoreDisplay.textContent = "スコア: " + score;
     gameOverScreen.classList.add("hidden");
 
-    clearInterval(gameInterval);
-    gameInterval = setInterval(spawnWord, 900);
+    spawnWordLoop(); // ★ 徐々に速くなるループ開始
+}
+
+// ★ 出現間隔が徐々に速くなるループ
+function spawnWordLoop() {
+    if (!isPlaying) return;
+
+    spawnWord();
+
+    // 徐々に速くする（本当に少しずつ）
+    if (spawnDelay > 200) {
+        spawnDelay -= 5;
+    }
+
+    setTimeout(spawnWordLoop, spawnDelay);
 }
 
 function spawnWord() {
@@ -47,22 +61,47 @@ function spawnWord() {
     let wordText;
 
     if (rand < 0.03) {
-        // 3%で「しま」
-        wordText = "しま";
+        wordText = "しま"; // レア文字
     } else if (rand < 0.7) {
-        // 67%で正解ワード
         wordText = correctWords[Math.floor(Math.random() * correctWords.length)];
     } else {
-        // 30%で間違いワード
         const wrongKeys = Object.keys(wrongWords);
         wordText = wrongKeys[Math.floor(Math.random() * wrongKeys.length)];
     }
 
     wordElem.textContent = wordText;
 
-    // ランダム位置
-    const x = Math.random() * (gameArea.clientWidth - 80);
-    const y = Math.random() * (gameArea.clientHeight - 80);
+    // ★ 重なり防止ロジック
+    let x, y;
+    let safe = false;
+
+    while (!safe) {
+        x = Math.random() * (gameArea.clientWidth - 80);
+        y = Math.random() * (gameArea.clientHeight - 160); // 広告避ける
+
+        safe = true;
+
+        const existingWords = document.querySelectorAll(".word");
+        existingWords.forEach(w => {
+            const rect1 = { x: x, y: y, w: 80, h: 80 };
+            const rect2 = {
+                x: parseFloat(w.style.left),
+                y: parseFloat(w.style.top),
+                w: w.offsetWidth,
+                h: w.offsetHeight
+            };
+
+            if (
+                rect1.x < rect2.x + rect2.w &&
+                rect1.x + rect1.w > rect2.x &&
+                rect1.y < rect2.y + rect2.h &&
+                rect1.y + rect1.h > rect2.y
+            ) {
+                safe = false;
+            }
+        });
+    }
+
     wordElem.style.left = x + "px";
     wordElem.style.top = y + "px";
 
@@ -94,7 +133,6 @@ function spawnWord() {
 
 function endGame(wrongWord) {
     isPlaying = false;
-    clearInterval(gameInterval);
 
     let message;
 
