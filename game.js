@@ -116,36 +116,45 @@ function spawnWord() {
 
     wordElem.textContent = wordText;
 
-    // 重なり防止
-    let x, y;
-    let safe = false;
+// 重なり防止（無限ループ対策付き）
+let x, y;
+let safe = false;
+let tries = 0;
 
-    while (!safe) {
-        x = Math.random() * (gameArea.clientWidth - 80);
-        y = Math.random() * (gameArea.clientHeight - 160);
+while (!safe && tries < 100) {
+    x = Math.random() * (gameArea.clientWidth - 80);
+    y = Math.random() * (gameArea.clientHeight - 160);
 
-        safe = true;
+    safe = true;
+    tries++;
 
-        const existingWords = document.querySelectorAll(".word");
-        existingWords.forEach(w => {
-            const rect1 = { x: x, y: y, w: 80, h: 80 };
-            const rect2 = {
-                x: parseFloat(w.style.left),
-                y: parseFloat(w.style.top),
-                w: w.offsetWidth,
-                h: w.offsetHeight
-            };
+    const existingWords = document.querySelectorAll(".word");
+    existingWords.forEach(w => {
+        const rect1 = { x: x, y: y, w: 80, h: 80 };
+        const rect2 = {
+            x: parseFloat(w.style.left),
+            y: parseFloat(w.style.top),
+            w: w.offsetWidth,
+            h: w.offsetHeight
+        };
 
-            if (
-                rect1.x < rect2.x + rect2.w &&
-                rect1.x + rect1.w > rect2.x &&
-                rect1.y < rect2.y + rect2.h &&
-                rect1.y + rect1.h > rect2.y
-            ) {
-                safe = false;
-            }
-        });
-    }
+        if (
+            rect1.x < rect2.x + rect2.w &&
+            rect1.x + rect1.w > rect2.x &&
+            rect1.y < rect2.y + rect2.h &&
+            rect1.y + rect1.h > rect2.y
+        ) {
+            safe = false;
+        }
+    });
+}
+
+// 100回試してもダメなら強制配置
+if (!safe) {
+    x = Math.random() * (gameArea.clientWidth - 80);
+    y = Math.random() * (gameArea.clientHeight - 160);
+}
+
 
     wordElem.style.left = x + "px";
     wordElem.style.top = y + "px";
