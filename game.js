@@ -30,12 +30,10 @@ const gameOverMessage = document.getElementById("game-over-message");
 document.getElementById("title-start-btn").addEventListener("click", startGame);
 document.getElementById("restart-btn").addEventListener("click", startGame);
 
-// ランキング読み込み
+// ローカルランキング読み込み
 function loadRanking() {
     const data = JSON.parse(localStorage.getItem("ranking")) || [];
-    loadWorldRanking();
 
-    // タイトル画面のランキング
     rankingListTitle.innerHTML = "";
     data.forEach((item, i) => {
         const li = document.createElement("li");
@@ -43,7 +41,6 @@ function loadRanking() {
         rankingListTitle.appendChild(li);
     });
 
-    // ゲームオーバー画面のランキング
     rankingListGameover.innerHTML = "";
     data.forEach((item, i) => {
         const li = document.createElement("li");
@@ -52,7 +49,6 @@ function loadRanking() {
     });
 }
 
-// ランキング保存
 function saveRanking(newScore) {
     let data = JSON.parse(localStorage.getItem("ranking")) || [];
     data.push(newScore);
@@ -64,10 +60,9 @@ function saveRanking(newScore) {
 }
 
 loadRanking();
+loadWorldRanking(); // Firebase読み込み
 
 function startGame() {
-
-    // ゲームエリアはそのまま表示
     gameArea.classList.remove("hidden");
     scoreDisplay.classList.remove("hidden");
 
@@ -77,12 +72,10 @@ function startGame() {
     scoreDisplay.textContent = "スコア: " + score;
     gameOverScreen.classList.add("hidden");
 
-    // ゲームエリアをクリア
     gameArea.innerHTML = "";
 
     spawnWordLoop();
 }
-
 
 // 徐々に速くなるループ
 function spawnWordLoop() {
@@ -117,45 +110,43 @@ function spawnWord() {
 
     wordElem.textContent = wordText;
 
-// 重なり防止（無限ループ対策付き）
-let x, y;
-let safe = false;
-let tries = 0;
+    // 重なり防止（無限ループ対策）
+    let x, y;
+    let safe = false;
+    let tries = 0;
 
-while (!safe && tries < 100) {
-    x = Math.random() * (gameArea.clientWidth - 80);
-    y = Math.random() * (gameArea.clientHeight - 160);
+    while (!safe && tries < 100) {
+        x = Math.random() * (gameArea.clientWidth - 80);
+        y = Math.random() * (gameArea.clientHeight - 160);
 
-    safe = true;
-    tries++;
+        safe = true;
+        tries++;
 
-    const existingWords = document.querySelectorAll(".word");
-    existingWords.forEach(w => {
-        const rect1 = { x: x, y: y, w: 80, h: 80 };
-        const rect2 = {
-            x: parseFloat(w.style.left),
-            y: parseFloat(w.style.top),
-            w: w.offsetWidth,
-            h: w.offsetHeight
-        };
+        const existingWords = document.querySelectorAll(".word");
+        existingWords.forEach(w => {
+            const rect1 = { x: x, y: y, w: 80, h: 80 };
+            const rect2 = {
+                x: parseFloat(w.style.left),
+                y: parseFloat(w.style.top),
+                w: w.offsetWidth,
+                h: w.offsetHeight
+            };
 
-        if (
-            rect1.x < rect2.x + rect2.w &&
-            rect1.x + rect1.w > rect2.x &&
-            rect1.y < rect2.y + rect2.h &&
-            rect1.y + rect1.h > rect2.y
-        ) {
-            safe = false;
-        }
-    });
-}
+            if (
+                rect1.x < rect2.x + rect2.w &&
+                rect1.x + rect1.w > rect2.x &&
+                rect1.y < rect2.y + rect2.h &&
+                rect1.y + rect1.h > rect2.y
+            ) {
+                safe = false;
+            }
+        });
+    }
 
-// 100回試してもダメなら強制配置
-if (!safe) {
-    x = Math.random() * (gameArea.clientWidth - 80);
-    y = Math.random() * (gameArea.clientHeight - 160);
-}
-
+    if (!safe) {
+        x = Math.random() * (gameArea.clientWidth - 80);
+        y = Math.random() * (gameArea.clientHeight - 160);
+    }
 
     wordElem.style.left = x + "px";
     wordElem.style.top = y + "px";
@@ -197,67 +188,12 @@ function endGame(wrongWord) {
         message = `${wrongWord}を潰した\n${comment}`;
     }
 
-    // ★スコアを保存
     saveRanking(score);
     saveWorldRanking(score);
     loadRanking();
+    loadWorldRanking();
 
-    // ★スコアを表示（ここを追加）
     gameOverMessage.textContent = `スコア: ${score}点\n${message}`;
 
     gameOverScreen.classList.remove("hidden");
 }
-
-function shareGame() {
-    const shareData = {
-        title: "暇つぶしゲーム",
-        text: "このゲーム面白いよ！暇を潰せるよ！",
-        url: location.href
-    };
-
-    if (navigator.share) {
-        navigator.share(shareData)
-            .catch(err => console.log("シェア失敗:", err));
-    } else {
-        alert("このブラウザはシェア機能に対応していません。\nURLをコピーして紹介してください！");
-    }
-}
-
-function saveWorldRanking(newScore) {
-    const ref = db.ref("worldRanking");
-    ref.push(newScore);
-}
-
-function loadWorldRanking() {
-    const ref = db.ref("worldRanking");
-
-    ref.once("value", snapshot => {
-        const data = snapshot.val() || {};
-
-        const scores = Object.values(data)
-            .sort((a, b) => b - a)
-            .slice(0, 5);
-
-        // タイトル画面
-        const worldListTitle = document.getElementById("world-ranking-list");
-        worldListTitle.innerHTML = "";
-        scores.forEach((s, i) => {
-            const li = document.createElement("li");
-            li.textContent = `${i + 1}位：${s}点`;
-            worldListTitle.appendChild(li);
-        });
-
-        // ゲームオーバー画面
-        const worldListGameover = document.getElementById("world-ranking-list-gameover");
-        worldListGameover.innerHTML = "";
-        scores.forEach((s, i) => {
-            const li = document.createElement("li");
-            li.textContent = `${i + 1}位：${s}点`;
-            worldListGameover.appendChild(li);
-        });
-    });
-}
-
-document.getElementById("share-btn")?.addEventListener("click", shareGame);
-document.getElementById("share-btn-gameover")?.addEventListener("click", shareGame);
-
