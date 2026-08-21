@@ -227,6 +227,35 @@ function saveWorldRanking(newScore) {
     ref.push(newScore);
 }
 
+function loadWorldRanking() {
+    const ref = db.ref("worldRanking");
+
+    ref.once("value", snapshot => {
+        const data = snapshot.val() || {};
+
+        const scores = Object.values(data)
+            .sort((a, b) => b - a)
+            .slice(0, 5);
+
+        // タイトル画面
+        const worldListTitle = document.getElementById("world-ranking-list");
+        worldListTitle.innerHTML = "";
+        scores.forEach((s, i) => {
+            const li = document.createElement("li");
+            li.textContent = `${i + 1}位：${s}点`;
+            worldListTitle.appendChild(li);
+        });
+
+        // ゲームオーバー画面
+        const worldListGameover = document.getElementById("world-ranking-list-gameover");
+        worldListGameover.innerHTML = "";
+        scores.forEach((s, i) => {
+            const li = document.createElement("li");
+            li.textContent = `${i + 1}位：${s}点`;
+            worldListGameover.appendChild(li);
+        });
+    });
+}
 
 document.getElementById("share-btn")?.addEventListener("click", shareGame);
 document.getElementById("share-btn-gameover")?.addEventListener("click", shareGame);
