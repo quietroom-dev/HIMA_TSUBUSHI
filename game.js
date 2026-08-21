@@ -62,6 +62,11 @@ function saveRanking(newScore) {
 
 loadRanking();
 loadWorldRanking(); // ★世界ランキング読み込み
+alert("snapshot.val(): " + JSON.stringify(data));
+alert("scores: " + scores.join(","));
+alert("innerHTML 書き込み直前");
+
+
 
 function startGame() {
     gameArea.classList.remove("hidden");
