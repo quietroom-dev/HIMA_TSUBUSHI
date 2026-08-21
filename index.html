@@ -1,100 +1,194 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>暇つぶしゲーム</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+<meta charset="UTF-8">
+<title>暇つぶしゲーム</title>
 
-<script>
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
+<!-- Firebase SDK（モジュール版） -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+    const firebaseConfig = {
+        apiKey: "AIzaSyC8Lyx05eZPxIAgDBTrTlWGnDRdgNqYxgM",
+        authDomain: "hima-tsubushi-1f104.firebaseapp.com",
+        databaseURL: "https://hima-tsubushi-1f104-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "hima-tsubushi-1f104",
+        storageBucket: "hima-tsubushi-1f104.appspot.com",
+        messagingSenderId: "720746626169",
+        appId: "1:720746626169:web:770e7674e981bd1e6e28a8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // 世界ランキング保存
+    window.saveWorldRanking = function(score) {
+        push(ref(db, "worldRanking"), score);
+    };
+
+    // 世界ランキング読み込み
+    window.loadWorldRanking = async function() {
+        const snapshot = await get(ref(db, "worldRanking"));
+        const data = snapshot.val() || {};
+
+        const scores = Object.values(data)
+            .sort((a, b) => b - a)
+            .slice(0, 5);
+
+        document.getElementById("world-ranking-list").innerHTML =
+            scores.map((s, i) => `<li>${i+1}位：${s}点</li>`).join("");
+
+        document.getElementById("world-ranking-list-gameover").innerHTML =
+            scores.map((s, i) => `<li>${i+1}位：${s}点</li>`).join("");
+    };
 </script>
+
+<style>
+/* ゆかたの CSS（そのまま） */
+body {
+    font-family: sans-serif;
+    text-align: center;
+    background: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+#title-screen {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.description {
+    font-size: 0.8rem;
+    margin: 10px 0 20px;
+}
+
+.ranking-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 10px 0;
+}
+
+.ranking-column {
+    width: 48%;
+}
+
+.ranking-column h3 {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.ranking-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#game-area {
+    width: 100%;
+    height: calc(60vh - 20px);
+    background: #fff;
+    border: 2px solid #ccc;
+    position: relative;
+    overflow: hidden;
+}
+
+.start-inside {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    font-size: 1.2rem;
+}
+
+.word {
+    position: absolute;
+    font-size: 2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+#score {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+}
+
+#game-over {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 300px;
+    z-index: 1000;
+}
+
+#game-over-message {
+    white-space: pre-line;
+}
+
+.hidden {
+    display: none;
+}
+</style>
 
 </head>
 <body>
 
-<!-- ★タイトル（ゲームエリアの上） -->
+<!-- タイトル画面 -->
 <div id="title-screen">
     <h1>暇つぶしゲーム</h1>
+    <p class="description">いろんな暇をタップで潰してください。</p>
 
-    <p class="description">
-    画面に出てくるいろんな暇を<br>
-    タップで潰してください。
-</p>
+    <h2>ランキング</h2>
 
-</div>
+    <div class="ranking-wrapper">
+        <div class="ranking-column">
+            <h3>自己ベスト</h3>
+            <ul id="ranking-list"></ul>
+        </div>
 
-<!-- ★ゲームエリア（ランキング＋開始ボタン） -->
-<div id="game-area">
-    <div id="ranking-area">
-        <h2>ランキング</h2>
-
-<div class="ranking-wrapper">
-    <div class="ranking-column">
-        <h3>自己ベスト</h3>
-        <ul id="ranking-list"></ul>
-    </div>
-
-    <div class="ranking-column">
-        <h3>世界ランク</h3>
-        <ul id="world-ranking-list"></ul>
-    </div>
-</div>
-
+        <div class="ranking-column">
+            <h3>世界ランク</h3>
+            <ul id="world-ranking-list"></ul>
+        </div>
     </div>
 
     <button id="title-start-btn" class="start-inside">ゲーム開始</button>
 </div>
 
-<div id="score" class="hidden">スコア: 0</div>
+<!-- ゲームエリア -->
+<div id="game-area" class="hidden"></div>
+<div id="score" class="hidden"></div>
 
+<!-- ゲームオーバー画面 -->
 <div id="game-over" class="hidden">
     <h2>ゲーム終了</h2>
     <p id="game-over-message"></p>
 
-    <h3>ランキング</h3>
+    <div class="ranking-wrapper">
+        <div class="ranking-column">
+            <h3>自己ベスト</h3>
+            <ul id="ranking-list-gameover"></ul>
+        </div>
 
-<div class="ranking-wrapper">
-    <div class="ranking-column">
-        <h3>自己ベスト</h3>
-        <ul id="ranking-list-gameover"></ul>
+        <div class="ranking-column">
+            <h3>世界ランク</h3>
+            <ul id="world-ranking-list-gameover"></ul>
+        </div>
     </div>
-
-    <div class="ranking-column">
-        <h3>世界ランク</h3>
-        <ul id="world-ranking-list-gameover"></ul>
-    </div>
-</div>
-
 
     <button id="restart-btn">もう一度遊ぶ</button>
-    <button id="share-btn-gameover" class="share-button">このゲームを紹介する</button>
 </div>
-
-<footer id="ad-footer">
-    <a href="https://quietroom-dev.github.io/QuietRoom/" target="_blank" class="ad-link">
-<div style="font-size:12px;">
-          ✨アプリ紹介✨<br>
-        📱 誰かわからん通話<br>
-    匿名・モザイクで安心して話せるビデオ通話<br>
-    完全無料、インストール不要で利用可能👍
-</div>
-</footer>
-
 
 <script src="game.js"></script>
+
 </body>
 </html>
