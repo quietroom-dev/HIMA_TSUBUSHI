@@ -198,6 +198,7 @@ function endGame(wrongWord) {
 
     // ★スコアを保存
     saveRanking(score);
+    saveWorldRanking(score);
     loadRanking();
 
     // ★スコアを表示（ここを追加）
@@ -220,6 +221,12 @@ function shareGame() {
         alert("このブラウザはシェア機能に対応していません。\nURLをコピーして紹介してください！");
     }
 }
+
+function saveWorldRanking(newScore) {
+    const ref = db.ref("worldRanking");
+    ref.push(newScore);
+}
+
 
 document.getElementById("share-btn")?.addEventListener("click", shareGame);
 document.getElementById("share-btn-gameover")?.addEventListener("click", shareGame);
