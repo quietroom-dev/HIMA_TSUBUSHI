@@ -190,8 +190,11 @@ function endGame(wrongWord) {
 
     saveRanking(score);
     saveWorldRanking(score);
+window.onload = () => {
     loadRanking();
     loadWorldRanking();
+};
+
 
     gameOverMessage.textContent = `スコア: ${score}点\n${message}`;
 
