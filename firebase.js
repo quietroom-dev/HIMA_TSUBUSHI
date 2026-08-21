@@ -16,6 +16,7 @@ const db = getDatabase(app);
 
 // 保存
 window.saveWorldRanking = function(score) {
+    alert("loadWorldRanking 実行された");
     push(ref(db, "worldRanking"), score);
 };
 
