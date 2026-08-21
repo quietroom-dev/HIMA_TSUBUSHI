@@ -33,6 +33,7 @@ document.getElementById("restart-btn").addEventListener("click", startGame);
 // ランキング読み込み
 function loadRanking() {
     const data = JSON.parse(localStorage.getItem("ranking")) || [];
+    loadWorldRanking();
 
     // タイトル画面のランキング
     rankingListTitle.innerHTML = "";
