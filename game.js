@@ -60,7 +60,7 @@ function saveRanking(newScore) {
 }
 
 loadRanking();
-loadWorldRanking(); // Firebase読み込み
+loadWorldRanking(); // ★世界ランキング読み込み
 
 function startGame() {
     gameArea.classList.remove("hidden");
@@ -110,7 +110,7 @@ function spawnWord() {
 
     wordElem.textContent = wordText;
 
-    // 重なり防止（無限ループ対策）
+    // 重なり防止
     let x, y;
     let safe = false;
     let tries = 0;
@@ -197,3 +197,21 @@ function endGame(wrongWord) {
 
     gameOverScreen.classList.remove("hidden");
 }
+
+function shareGame() {
+    const shareData = {
+        title: "暇つぶしゲーム",
+        text: "このゲーム面白いよ！暇を潰せるよ！",
+        url: location.href
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData)
+            .catch(err => console.log("シェア失敗:", err));
+    } else {
+        alert("このブラウザはシェア機能に対応していません。\nURLをコピーして紹介してください！");
+    }
+}
+
+document.getElementById("share-btn")?.addEventListener("click", shareGame);
+document.getElementById("share-btn-gameover")?.addEventListener("click", shareGame);
