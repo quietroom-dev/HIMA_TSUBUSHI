@@ -1,3 +1,4 @@
+alert("firebase.js 読み込み確認: " + (typeof loadWorldRanking));
 // 正解ワード
 const correctWords = ["暇", "ひま", "暇ー！", "ひま〜", "ヒマ", "ひまだな〜"];
 
