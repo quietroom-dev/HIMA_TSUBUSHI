@@ -1,4 +1,3 @@
-alert("firebase.js 読み込み確認: " + (typeof loadWorldRanking));
 // 正解ワード
 const correctWords = ["暇", "ひま", "暇ー！", "ひま〜", "ヒマ", "ひまだな〜"];
 
@@ -61,12 +60,9 @@ function saveRanking(newScore) {
 }
 
 loadRanking();
-loadWorldRanking(); // ★世界ランキング読み込み
-alert("snapshot.val(): " + JSON.stringify(data));
-alert("scores: " + scores.join(","));
-alert("innerHTML 書き込み直前");
-
-
+if (typeof loadWorldRanking === "function") {
+    loadWorldRanking();
+}
 
 function startGame() {
     gameArea.classList.remove("hidden");
@@ -77,8 +73,6 @@ function startGame() {
     spawnDelay = 900;
     scoreDisplay.textContent = "スコア: " + score;
     gameOverScreen.classList.add("hidden");
-
-    gameArea.innerHTML = "";
 
     spawnWordLoop();
 }
@@ -195,11 +189,10 @@ function endGame(wrongWord) {
     }
 
     saveRanking(score);
-    saveWorldRanking(score);
-window.onload = () => {
-    loadRanking();
+
+saveWorldRanking(score).then(() => {
     loadWorldRanking();
-};
+});
 
 
     gameOverMessage.textContent = `スコア: ${score}点\n${message}`;
