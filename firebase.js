@@ -1,5 +1,3 @@
-alert("firebase.js 実行開始");
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
@@ -16,13 +14,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 保存
+// 世界ランキング保存
 window.saveWorldRanking = function(score) {
-    alert("loadWorldRanking 実行された");
-    push(ref(db, "worldRanking"), score);
+    return push(ref(db, "worldRanking"), score);
 };
 
-// 読み込み
+// 世界ランキング読み込み
 window.loadWorldRanking = async function() {
     const snapshot = await get(ref(db, "worldRanking"));
     const data = snapshot.val() || {};
@@ -31,9 +28,18 @@ window.loadWorldRanking = async function() {
         .sort((a, b) => b - a)
         .slice(0, 5);
 
-    document.getElementById("world-ranking-list").innerHTML =
-        scores.map((s, i) => `<li>${i+1}位：${s}点</li>`).join("");
+    const rankingHTML = scores
+        .map((s, i) => `<li>${i + 1}位：${s}点</li>`)
+        .join("");
 
-    document.getElementById("world-ranking-list-gameover").innerHTML =
-        scores.map((s, i) => `<li>${i+1}位：${s}点</li>`).join("");
+    const titleList = document.getElementById("world-ranking-list");
+    const gameoverList = document.getElementById("world-ranking-list-gameover");
+
+    if (titleList) {
+        titleList.innerHTML = rankingHTML;
+    }
+
+    if (gameoverList) {
+        gameoverList.innerHTML = rankingHTML;
+    }
 };
