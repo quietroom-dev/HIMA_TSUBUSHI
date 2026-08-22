@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>暇つぶしゲーム</title>
+
     <link rel="stylesheet" href="style.css">
 
-    <!-- Firebase を外部ファイルから読み込む -->
+    <!-- Firebase -->
     <script type="module" src="firebase.js"></script>
-
 </head>
+
 <body>
 
-<!-- ★タイトル（ゲームエリアの上） -->
+<!-- タイトル -->
 <div id="title-screen">
     <h1>暇潰しゲーム</h1>
 
@@ -22,54 +24,109 @@
     </p>
 </div>
 
-<!-- ★ゲームエリア（ランキング＋開始ボタン） -->
+
+<!-- ゲームエリア -->
 <div id="game-area">
+
+    <!-- 開始前のランキング -->
     <div id="ranking-area">
+
         <h2>ランキング</h2>
 
         <div class="ranking-wrapper">
+
+            <!-- 自己ベスト -->
             <div class="ranking-column">
+
                 <h3>自己ベスト</h3>
+
                 <ul id="ranking-list"></ul>
+
             </div>
 
+
+            <!-- 世界ランキング -->
             <div class="ranking-column">
+
                 <h3>世界ランク</h3>
+
                 <ul id="world-ranking-list"></ul>
+
             </div>
+
         </div>
 
     </div>
 
-    <button id="title-start-btn" class="start-inside">ゲーム開始</button>
+
+    <!-- ゲーム開始ボタン -->
+    <button id="title-start-btn" class="start-inside">
+        ゲーム開始
+    </button>
+
 </div>
 
-<div id="score" class="hidden">スコア: 0</div>
 
+<!-- スコア -->
+<div id="score" class="hidden">
+    スコア: 0
+</div>
+
+
+<!-- ゲームオーバー -->
 <div id="game-over" class="hidden">
+
     <h2>ゲーム終了</h2>
+
     <p id="game-over-message"></p>
+
 
     <h3>ランキング</h3>
 
     <div class="ranking-wrapper">
+
+        <!-- 自己ベスト -->
         <div class="ranking-column">
+
             <h3>自己ベスト</h3>
+
             <ul id="ranking-list-gameover"></ul>
+
         </div>
 
+
+        <!-- 世界ランキング -->
         <div class="ranking-column">
+
             <h3>世界ランク</h3>
+
             <ul id="world-ranking-list-gameover"></ul>
+
         </div>
+
     </div>
 
-    <button id="restart-btn">もう一度遊ぶ</button>
-    <button id="share-btn-gameover" class="share-button">このゲームを紹介する</button>
+
+    <button id="restart-btn">
+        もう一度遊ぶ
+    </button>
+
+
+    <button id="share-btn-gameover" class="share-button">
+        このゲームを紹介する
+    </button>
+
 </div>
 
+
+<!-- 広告 -->
 <footer id="ad-footer">
-    <a href="https://quietroom-dev.github.io/QuietRoom/" target="_blank" class="ad-link">
+
+    <a
+        href="https://quietroom-dev.github.io/QuietRoom/"
+        target="_blank"
+        class="ad-link"
+    >
         <div style="font-size:12px;">
             ✨アプリ紹介✨<br>
             📱 誰かわからん通話<br>
@@ -77,8 +134,12 @@
             完全無料、インストール不要で利用可能👍
         </div>
     </a>
+
 </footer>
 
+
+<!-- ゲーム本体 -->
 <script src="game.js"></script>
+
 </body>
 </html>
