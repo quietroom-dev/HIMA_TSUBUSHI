@@ -212,88 +212,46 @@ loadRanking();
  * ゲーム開始
  */
 function startGame() {
-
-    /*
-     * 開始前ランキングを消す
-     */
     rankingArea.classList.add("hidden");
-
-
-    /*
-     * 開始ボタンを消す
-     */
     startButton.classList.add("hidden");
-
-
-    /*
-     * ゲームオーバーを消す
-     */
     gameOverScreen.classList.add("hidden");
-
-
-    /*
-     * ゲームエリアを表示
-     */
     gameArea.classList.remove("hidden");
-
-
-    /*
-     * スコア表示
-     */
     scoreDisplay.classList.remove("hidden");
 
-
     score = 0;
-
     isPlaying = true;
 
     spawnDelay = 900;
+    spawnCount = 0;
 
+    scoreDisplay.textContent = "スコア: " + score;
 
-    scoreDisplay.textContent =
-        "スコア: " + score;
-
-
-    /*
-     * ゲームエリア内の「文字」だけ削除
-     *
-     * innerHTML = "" は使わない
-     */
     document
         .querySelectorAll(".word")
         .forEach(word => word.remove());
 
-
     spawnWordLoop();
-
 }
-
 
 /*
  * 徐々に速くなるループ
  */
 function spawnWordLoop() {
-
-    if (!isPlaying) {
-        return;
-    }
-
+    if (!isPlaying) return;
 
     spawnWord();
 
+    spawnCount++;
 
-    if (spawnDelay > 10) {
-
-        spawnDelay -= 10;
-
+    // 10回出現するごとに5%速くする
+    if (spawnCount % 10 === 0) {
+        spawnDelay *= 0.95;
     }
 
+    // 最低300ms
+    spawnDelay = Math.max(300, spawnDelay);
 
-    setTimeout(
-        spawnWordLoop,
-        spawnDelay
-    );
-
+    setTimeout(spawnWordLoop, spawnDelay);
 }
 
 
