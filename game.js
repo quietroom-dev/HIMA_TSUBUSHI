@@ -243,8 +243,8 @@ function spawnWordLoop() {
 
     spawnCount++;
 
-    // 10回出現するごとに5%速くする
-    if (spawnCount % 10 === 0) {
+    // 5回出現するごとに5%速くする
+    if (spawnCount % 5 === 0) {
         spawnDelay *= 0.95;
     }
 
